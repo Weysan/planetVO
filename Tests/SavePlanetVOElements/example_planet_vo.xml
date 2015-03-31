@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Stock>
+ <Vehicule>
+  <CodePvo>tt4</CodePvo>
+  <SocieteNom>GARAGE CITROEN CHASTEL NOUVEL</SocieteNom>
+  <SocieteMarque>CITROEN</SocieteMarque>
+  <SocieteAdresse>RUE DES FRERES AMIEUX</SocieteAdresse>
+  <SocieteAdresseSuite/>
+  <SocieteCodePostal>48000</SocieteCodePostal>
+  <SocieteVille>CHASTEL NOUVEL</SocieteVille>
+  <ContactsNoms>Patrick MEUNIER</ContactsNoms>
+  <ContactsTelephones>02.55.05.74.37</ContactsTelephones>
+  <ContactsTelephones2>02.93.16.35.57</ContactsTelephones2>
+  <ContactsEmails>patrick-meunier@garage-citroen-chastel-nouvel.fr</ContactsEmails>
+  <IdentifiantVehicule>31057544020</IdentifiantVehicule>
+  <ReferenceVehicule>116GT0X3</ReferenceVehicule>
+  <NumeroPolice>3105754</NumeroPolice>
+  <StatutStock>ST</StatutStock>
+  <Annee>2010</Annee>
+  <Date1Mec>14-07-2010</Date1Mec>
+  <GenreLibelle>Voitures</GenreLibelle>
+  <Marque>RENAULT</Marque>
+  <Famille>Clio</Famille>
+  <Version>Campus 1.2 GPL 60ch Campus Authentique 3p</Version>
+  <Modele>Clio Campus 1.2 GPL 60ch Campus Authentique 3p</Modele>
+  <TypeMine/>
+  <EnergieLibelle>GPL</EnergieLibelle>
+  <PuissanceFiscale>4</PuissanceFiscale>
+  <PuissanceReelle>60</PuissanceReelle>
+  <Cylindree>1149</Cylindree>
+  <NbPlaces>5</NbPlaces>
+  <NbPortes>3</NbPortes>
+  <Kilometrage>20450</Kilometrage>
+  <KmGaranti>Non garanti</KmGaranti>
+  <Couleur>Gris Clair Métal</Couleur>
+  <BoiteLibelle>Manuelle</BoiteLibelle>
+  <NbRapports>5</NbRapports>
+  <PrixVenteTTC>11310</PrixVenteTTC>
+  <PremiereMain>FAUX</PremiereMain>
+  <GarantieLibelle/>
+  <DestinationLibelle>Particulier</DestinationLibelle>
+  <CategorieLibelle>Berline</CategorieLibelle>
+  <EquipementsSerieEtOption>ABS|Aide au freinage d'urgence|Airbags latéraux avant|Phares antibrouillard|Direction assistée|Fixations Isofix aux places arrières|Vitres avant électriques|Pack électrique|Prise auxiliaire de connexion audio|Radio CD|Siège conducteur réglable en hauteur|Verrouillage auto. des portes en roulant|Verrouillage centralisé des portes|Verrouillage centralisé à distance|Volant réglable en hauteur</EquipementsSerieEtOption>
+  <SiteLibelle>CHASTEL NOUVEL</SiteLibelle>
+  <LieuLibelle>DAMMARTIN EN GOELE</LieuLibelle>
+  <Photos></Photos>
+  <Co2>143</Co2>
+  <CommentairePublic/>
+  <Poids>975</Poids>
+  <PTAC>1520</PTAC>
+  <PTRA>2250</PTRA>
+  <ChargeUtile>465</ChargeUtile>
+  <Longueur>0</Longueur>
+  <Largeur>0</Largeur>
+  <Empattement>2472</Empattement>
+  <Hauteur>0</Hauteur>
+  <Volume>0</Volume>
+  <Silhouette/>
+  <DerniereVisiteTechnique/>
+  <DateControlographe/>
+ </Vehicule>
+ <Vehicule>
+  <CodePvo>tt4</CodePvo>
+  <SocieteNom>GARAGE CITROEN CHASTEL NOUVEL</SocieteNom>
+  <SocieteMarque>CITROEN</SocieteMarque>
+  <SocieteAdresse>RUE DES FRERES AMIEUX</SocieteAdresse>
+  <SocieteAdresseSuite/>
+  <SocieteCodePostal>48000</SocieteCodePostal>
+  <SocieteVille>CHASTEL NOUVEL</SocieteVille>
+  <ContactsNoms>Patrick MEUNIER</ContactsNoms>
+  <ContactsTelephones>02.55.05.74.37</ContactsTelephones>
+  <ContactsTelephones2>02.93.16.35.57</ContactsTelephones2>
+  <ContactsEmails>patrick-meunier@garage-citroen-chastel-nouvel.fr</ContactsEmails>
+  <IdentifiantVehicule>31057824020</IdentifiantVehicule>
+  <ReferenceVehicule>116GT8PQ</ReferenceVehicule>
+  <NumeroPolice>3105782</NumeroPolice>
+  <StatutStock>ST</StatutStock>
+  <Annee>2011</Annee>
+  <Date1Mec>07-02-2011</Date1Mec>
+  <GenreLibelle>Voitures</GenreLibelle>
+  <Marque>AUDI</Marque>
+  <Famille>A4 Avant quattro</Famille>
+  <Version>3.0 TDI240 DPF S Line STro</Version>
+  <Modele>A4 Avant quattro 3.0 TDI240 DPF S Line STro</Modele>
+  <TypeMine/>
+  <EnergieLibelle>Diesel</EnergieLibelle>
+  <PuissanceFiscale>15</PuissanceFiscale>
+  <PuissanceReelle>240</PuissanceReelle>
+  <Cylindree>2967</Cylindree>
+  <NbPlaces>5</NbPlaces>
+  <NbPortes>5</NbPortes>
+  <Kilometrage>32855</Kilometrage>
+  <KmGaranti>Non garanti</KmGaranti>
+  <Couleur>Beige Métal</Couleur>
+  <BoiteLibelle>Rob double embray</BoiteLibelle>
+  <NbRapports>7</NbRapports>
+  <PrixVenteTTC>43197</PrixVenteTTC>
+  <PremiereMain>VRAI</PremiereMain>
+  <GarantieLibelle/>
+  <DestinationLibelle>Destruction</DestinationLibelle>
+  <CategorieLibelle>Break</CategorieLibelle>
+  <EquipementsSerieEtOption>ABS|Airbags frontaux|Airbags latéraux avant|Airbags rideaux|Antipatinage|Phares antibrouillard|Banquette 1/3-2/3|Boite méca. robot. à double embrayage|Boite manuelle séquentielle|Clim automatique|Capteur de pluie et de luminosité|Sellerie cuir &amp; tissu|Direction assistée|ESP|Filtre à particules|Jantes Alu|Vitres arrière électriques|Vitres avant électriques|Ordinateur de bord|Radio CD MP3|Régulateur de vitesse|Radar de recul|Rétroviseurs électriques|Suspensions Sport|Verrouillage centralisé des portes|Volant réglable en profondeur et hauteur|Phares xénon + LED</EquipementsSerieEtOption>
+  <SiteLibelle>CHASTEL NOUVEL</SiteLibelle>
+  <LieuLibelle>CHARNAY LES CHALON</LieuLibelle>
+  <Photos></Photos>
+  <Co2>179</Co2>
+  <CommentairePublic/>
+  <Poids>1735</Poids>
+  <PTAC>2305</PTAC>
+  <PTRA>0</PTRA>
+  <ChargeUtile>0</ChargeUtile>
+  <Longueur>0</Longueur>
+  <Largeur>0</Largeur>
+  <Empattement>2808</Empattement>
+  <Hauteur>0</Hauteur>
+  <Volume>0</Volume>
+  <Silhouette>avant quattro</Silhouette>
+  <DerniereVisiteTechnique/>
+  <DateControlographe/>
+ </Vehicule>
+ <Vehicule>
+  <CodePvo>tt4</CodePvo>
+  <SocieteNom>GARAGE BMW MONT DE MARSAN</SocieteNom>
+  <SocieteMarque>BMW</SocieteMarque>
+  <SocieteAdresse>RUE GENERAL TRAVOT</SocieteAdresse>
+  <SocieteAdresseSuite/>
+  <SocieteCodePostal>40000</SocieteCodePostal>
+  <SocieteVille>MONT DE MARSAN</SocieteVille>
+  <ContactsNoms>Romain ANTOINE</ContactsNoms>
+  <ContactsTelephones>04.20.14.05.16</ContactsTelephones>
+  <ContactsTelephones2>01.40.89.06.79</ContactsTelephones2>
+  <ContactsEmails>romain-antoine@garage-bmw-mont-de-marsan.fr</ContactsEmails>
+  <IdentifiantVehicule>31057964020</IdentifiantVehicule>
+  <ReferenceVehicule>116GT4C0</ReferenceVehicule>
+  <NumeroPolice>3105796</NumeroPolice>
+  <StatutStock>ST</StatutStock>
+  <Annee>2011</Annee>
+  <Date1Mec>07-03-2011</Date1Mec>
+  <GenreLibelle>Voitures</GenreLibelle>
+  <Marque>CITROEN</Marque>
+  <Famille>C3</Famille>
+  <Version>1.1i GPL Airdeam</Version>
+  <Modele>C3 1.1i GPL Airdeam</Modele>
+  <TypeMine/>
+  <EnergieLibelle>GPL</EnergieLibelle>
+  <PuissanceFiscale>4</PuissanceFiscale>
+  <PuissanceReelle>58</PuissanceReelle>
+  <Cylindree>1124</Cylindree>
+  <NbPlaces>5</NbPlaces>
+  <NbPortes>5</NbPortes>
+  <Kilometrage>24874</Kilometrage>
+  <KmGaranti>Non garanti</KmGaranti>
+  <Couleur>Rouge</Couleur>
+  <BoiteLibelle>Manuelle</BoiteLibelle>
+  <NbRapports>5</NbRapports>
+  <PrixVenteTTC>12860</PrixVenteTTC>
+  <PremiereMain>FAUX</PremiereMain>
+  <GarantieLibelle/>
+  <DestinationLibelle>Marchand</DestinationLibelle>
+  <CategorieLibelle>Berline</CategorieLibelle>
+  <EquipementsSerieEtOption>ABS|Airbags frontaux|Banquette 1/3-2/3|Direction assistée|Vitres avant électriques|Ordinateur de bord|Radio CD MP3|Volant réglable en profondeur et hauteur</EquipementsSerieEtOption>
+  <SiteLibelle>MONT DE MARSAN</SiteLibelle>
+  <LieuLibelle>ST SAUVEUR</LieuLibelle>
+  <Photos>31057964020_01_hd.jpg|31057964020_02_hd.jpg|31057964020_03_hd.jpg</Photos>
+  <Co2>119</Co2>
+  <CommentairePublic/>
+  <Poids>1089</Poids>
+  <PTAC>1510</PTAC>
+  <PTRA>2410</PTRA>
+  <ChargeUtile>352</ChargeUtile>
+  <Longueur>0</Longueur>
+  <Largeur>0</Largeur>
+  <Empattement>2460</Empattement>
+  <Hauteur>0</Hauteur>
+  <Volume>0</Volume>
+  <Silhouette/>
+  <DerniereVisiteTechnique/>
+  <DateControlographe/>
+ </Vehicule>
+</Stock>

@@ -1,0 +1,8 @@
+name = Planet VO import
+description = Import Planet VO data - http://www.planetvo.fr/
+core = 7.x
+version = 7.x-0.1-dev
+package = CouleurCitron
+files[] = planetVO.module
+
+configure = admin/config/system/planetvo

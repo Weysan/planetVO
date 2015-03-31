@@ -1,0 +1,102 @@
+<?php
+/**
+ * Module routing
+ */
+function planetVO_menu()
+{
+    $items['planetVO'] = array(
+        'title' => t('Import planetVO data in your site'),
+        'page callback' => 'planetvo_content',
+        'access arguments' => array(true),
+        'type' => MENU_CALLBACK,
+      );
+
+      $items['admin/config/system/planetvo'] = array(
+        'title' => t('planetVO settings'),
+        'description' => t('planetVO configuration page'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('planetvo_admin_settings'),
+        'access arguments' => array('Importer configuration'),
+        'type' => MENU_NORMAL_ITEM,
+      );
+
+      return $items; 
+}
+
+/**
+ * Configuration form
+ */
+function planetvo_admin_settings()
+{
+  $form['planetvo_server'] = array(
+    '#type' => 'textfield',
+    '#title' => t('FTP server'),
+    '#description' => t('FTP Server access'),
+    '#default_value' => variable_get('planetvo_server'),
+  );
+  
+  $form['planetvo_login'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Login'),
+    '#description' => t('FTP Server login'),
+    '#default_value' => variable_get('planetvo_login'),
+  );
+  
+  $form['planetvo_pwd'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Password'),
+    '#description' => t('FTP Server password'),
+    '#default_value' => variable_get('planetvo_pwd'),
+  );
+  
+  $form['planetvo_code'] = array(
+    '#type' => 'textfield',
+    '#title' => t('planetVO code'),
+    '#description' => t('Ex: tt4'),
+    '#default_value' => variable_get('planetvo_code'),
+  );
+  
+  return system_settings_form($form);
+}
+
+/**
+ * CRON task
+ */
+function planetvo_cron()
+{
+    
+    
+    $interval = variable_get('cron_example_interval', 24 * 3600); //daily task
+    
+    if (time() >= variable_get('cron_planetvo_next_execution', 0)) {
+        
+        cron_task_import();
+        
+        watchdog('cron_planetvo', 'cron_planetvo ran');
+        variable_set('cron_planetvo_next_execution', time() + $interval);
+    }
+    
+    
+}
+
+/**
+ * the import task
+ */
+function cron_task_import()
+{
+    
+    require __DIR__ . '/autoload.php';
+    
+    if(!variable_get('planetvo_server') || !variable_get('planetvo_login') || !variable_get('planetvo_pwd') || !variable_get('planetvo_code'))
+        return false;
+
+    $ftpAccess = new \Import\FtpAccess\FtpAccess(variable_get('planetvo_server'), variable_get('planetvo_login'), variable_get('planetvo_pwd'));
+    $connect = $ftpAccess->connect();
+    
+    $importer = new Import\Importer();
+    $importer->setTransport($ftpAccess, variable_get('planetvo_code'));
+    $importer->importElements();
+    
+    $importer->saveElements(1);
+
+}
