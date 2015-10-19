@@ -44,7 +44,9 @@ class DrupalNode
      */
     public function findBy(array $criteria, $node_type, $count = null)
     {
-        return $this->createQuery($criteria, $count, $node_type);
+        $result =  $this->createQuery($criteria, $count, $node_type);
+
+        return $result;
     }
     
     /**
@@ -93,14 +95,19 @@ class DrupalNode
         $entities->entityCondition('bundle', $content_type);
         
         foreach($params as $field => $value){
+            if($field == 'title'){
+                $entities->propertyCondition($field, $value);
+                continue;
+            }
+            
             $entities->fieldCondition($field, 'value', $value, '=');
         }
         
         if($count)
             $entities->range(0,$count);
-        
+
         $result = $entities->execute();
-        
+
         if (isset($result['node'])) {
             $items_nids = array_keys($result['node']);
             $items = entity_load('node', $items_nids);

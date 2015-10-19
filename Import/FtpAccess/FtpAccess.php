@@ -28,6 +28,9 @@ class FtpAccess
      */
     public function __construct($host, $login = null, $pwd = null, $port = 21)
     {
+        
+        error_log('Init FTP : '.$host);
+        
         if(empty($host) || is_null($host)){
             throw new \Exception('You have to specify an host to your FTP access.');
         }
@@ -41,10 +44,10 @@ class FtpAccess
         $this->port = $port;
         
         //ftp connection strem
-        $this ->ftpstream = ftp_connect($host, $port);
-        
-        if(!$this ->ftpstream){
-            throw new \Exception('The server cannot be called by your FTP credentials.');
+        $this->ftpstream = ftp_connect($host, $port);
+        //var_dump($this ->ftpstream); die();
+        if(!$this->ftpstream){
+            throw new \Exception('The server cannot be called by your FTP credentials. Host : '.$host);
         }
     }
     
@@ -59,6 +62,8 @@ class FtpAccess
      */
     public function get($filename, $dirtodownload, $localfilename = null, $mode = null)
     {
+        error_log('Get FTP file : '.$filename);
+        
         if(empty($filename) || is_null($filename))
             throw new \Exception('You have to specify the distant file to get.');
         
@@ -78,6 +83,7 @@ class FtpAccess
      */
     public function connect()
     {
+        error_log('connect to FTP : '.$this->login);
         return ftp_login($this->ftpstream, $this->login, $this->pwd);
     }
     
@@ -89,6 +95,8 @@ class FtpAccess
      */
     public function goDir($directory)
     {
+        error_log('Change FTP directory : '.$directory);
+        
         return ftp_chdir($this->ftpstream, $directory);
     }
     

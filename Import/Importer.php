@@ -67,21 +67,30 @@ class Importer
         }
 
         $nb_element = 0;
-
+        $elements_saved = array();
         foreach($this->elements->children() as $element){
+            //ne remonter que les véhicules dont la destination est "particulier"
+            if(strtolower($element->DestinationLibelle) != 'particulier'){
+              continue;
+            }
 
             if(!is_null($nb_element_to_save) && $nb_element >= $nb_element_to_save) continue;
             
-            $node = $this->searchExisting((string)$element->IdentifiantVehicule);
+            //$node = $this->searchExisting((string)$element->IdentifiantVehicule);
+            if($element->Immatriculation == 'DF-099-HA'){
+              $test = 0;
+            }
             
+            $node = $this->searchExisting((string)$element->CodePvo, (string)$element->NumeroPolice);
+            //if($node->nid != 13222) continue;
             $saver = new SavePlanetVOElements($element, $photo_files, $this->ftp, $node);
 
             $saver->AddNodeElements();
             $idNode = $saver->save();
-
+            $elements_saved[] = $idNode;
             $nb_element++;
         }
-        return true;
+        return $elements_saved;
     }
     
     /**
@@ -92,15 +101,15 @@ class Importer
         if(is_null($this->ftp))
             throw new \Exception('You need a valid FTP access.');
         
-        $changeDir = $this->ftp->goDir('datas');
+        $changeDir = $this->ftp->goDir('/datas');
         
         $this->ftp->get($this->code_PVO.'.xml', __DIR__ . '/../tmp-import/', $this->code_PVO.'_'.$this->date.'.xml');
-        $get = $this->ftp->get('photos.txt.zip', __DIR__ . '/../tmp-import/', 'photos_'.$this->date.'.txt.zip');
+        $get = $this->ftp->get('photos.txt.zip', __DIR__ . '/../tmp-import/', 'photos_'.$this->date.'.txt.zip', FTP_BINARY);
         //var_dump($get);
         if(!file_exists(__DIR__ . '/../tmp-import/photos_'.$this->date.'.txt.zip') || !file_exists(__DIR__ . '/../tmp-import/' . $this->code_PVO.'_'.$this->date.'.xml')){
             throw new \Exception('Error during the file\'s import.');
         }
-        
+
         return true;
     }
     
@@ -129,12 +138,14 @@ class Importer
      * @param int $car_id
      * @return object
      */
-    private function searchExisting($car_id)
+    private function searchExisting($codePVO, $numero_police)
     {
-        $cars = $this->DrupalNode->findBy(array('field_id_vehicule_voplanet' => $car_id), 'voiture');
+        //$cars = $this->DrupalNode->findBy(array('field_id_vehicule_voplanet' => $car_id), 'voiture');
+        $cars = $this->DrupalNode->findBy(array('field_numero_de_police' => $numero_police, 'field_code_pvo' => $codePVO), 'voiture');
         
         if($cars){
             $car = current($cars);
+
             return $this->DrupalNode->findByID($car->nid);
         }
         

@@ -2,6 +2,7 @@
 namespace Import\SavePlanetVOElements;
 
 use Import\DrupalNode\DrupalNode;
+use Import\Modele\Modele;
 /**
  * Save a planetVO element in a drupal content type
  *
@@ -44,13 +45,20 @@ class SavePlanetVOElements
      */
     public function AddNodeElements()
     {
-        $this->node->title = 'PlanetVO import ' . $this->element->Marque . ' - ' . $this->element->Modele;
-        
+        $this->node->title = $this->element->Marque . ' - ' . $this->element->Modele;
+        var_dump($this->node->title);
         foreach($this->element->children() as $xmlLibelle => $xmlValue){
             $field = $this->convertXmlNode($xmlLibelle, $xmlValue);
+            $test = (string)$xmlValue;
             if(!$field) continue;
+            if($field == 'field_couleur' OR $field == 'field_famille'){
+              // Trim + mise en minuscule sur champ 
+              $this->node->{$field}[LANGUAGE_NONE][0]['value'] = trim(strtolower((string)$xmlValue));
+            }
+            else {
+              $this->node->{$field}[LANGUAGE_NONE][0]['value'] = (string)$xmlValue;
+            }
             
-            $this->node->{$field}[LANGUAGE_NONE][0]['value'] = (string)$xmlValue;
         }
     }
     
@@ -59,8 +67,16 @@ class SavePlanetVOElements
      */
     public function save()
     {
+        error_log('Save planetVO node : '.$this->node->title);
+        
         $drupalnode = new DrupalNode();
-        return $drupalnode->save($this->node);
+        
+        drupal_alter('voiture', $this->node); //permet à drupal de modifier du contenu custom
+
+        $nid = $drupalnode->save($this->node);
+        $node = node_load($nid);
+        drupal_alter('voiture_after_save', $node); //permet à drupal de modifier du contenu custom
+        return $nid;
     }
     
     /**
@@ -70,19 +86,28 @@ class SavePlanetVOElements
      */
     private function importPhotos($photos, \Import\FtpAccess\FtpAccess $ftp = null)
     {
+        error_log('Import voiture photo');
         $field = "field_photos";
         
         $aPhotos = explode('|', $photos[0]);
+        //var_dump($this->photo_files); die();
         /* file photo */
         $f = fopen($this->photo_files, 'r');
+        
+        $this->node->field_photos[LANGUAGE_NONE] = array();
+        var_dump($this->node->field_photos[LANGUAGE_NONE]);
+        var_dump('----');
         while(($line = fgets ($f, 4096))!== false){
+            
+            
             $cols = explode("\t", $line);
+            
             if(in_array($cols[0], $aPhotos)){
                 $this->upload_drupal_file($line, $ftp);
             }
             
         }
-        
+        var_dump($this->node->field_photos[LANGUAGE_NONE]);
         fclose($f);
     }
     
@@ -97,6 +122,8 @@ class SavePlanetVOElements
      */
     private function upload_drupal_file($photo_file_line, \Import\FtpAccess\FtpAccess $ftp = null)
     {
+        error_log('Upload a file');
+        
         $cols = explode("\t", $photo_file_line);
         
         //this image already saved and uploaded?
@@ -116,7 +143,8 @@ class SavePlanetVOElements
                 
                 if($this->ftp_current_dir != $dir_ftp){
                     $this->ftp_current_dir = $dir_ftp;
-                    
+                    $racine = $ftp->goDir('/');
+
                     $aDirectory = explode('/', $dir_ftp);
                     foreach($aDirectory as $dir){
                         if(empty($dir)) continue;
@@ -127,7 +155,7 @@ class SavePlanetVOElements
 
                 //upload the file
                 $uploaded_file = $drupal_node->uploadFile(realpath($tmp_dir . '/'.  basename($file_name_dir)), 'dallard/planetVO/');
-
+                var_dump($uploaded_file);
                 $id_pic = $this->savePhotoVoiture($uploaded_file, $cols);
 
                 //insert in node
@@ -137,7 +165,10 @@ class SavePlanetVOElements
                 throw new \Exception('You have to specify a FTP access');
             }
         } else {
+            error_log('image already downloaded');
             $result = current($results);
+            $this->node->field_photos[LANGUAGE_NONE][]['target_id'] = $result->nid;
+            
             return $result->nid;
         }
     }
@@ -151,6 +182,8 @@ class SavePlanetVOElements
      */
     private function savePhotoVoiture($file_info, $cols = array())
     {
+        error_log('Save photo voiture');
+        
         $drupalnode = new DrupalNode();
         $node_photo = $drupalnode->createNode('photo_voiture');
         
@@ -161,6 +194,9 @@ class SavePlanetVOElements
                                                         'description' => '',
                                                       );
         $node_photo->title = $cols[0];
+        
+        
+        drupal_alter('photo_voiture', $node_photo); //permet à drupal de modifier du contenu custom
         
         return $drupalnode->save($node_photo);
     }
@@ -173,6 +209,9 @@ class SavePlanetVOElements
      */
     private function convertXmlNode($xmlLibelle, $xmlValue = null)
     {
+        
+        //error_log('Convert XML to node field : ' . $xmlLibelle);
+        
         switch($xmlLibelle){
             case "CodePvo":
                 return 'field_code_pvo';
@@ -192,15 +231,15 @@ class SavePlanetVOElements
                 
                 return false;
                 break;
-            case "ContactsNoms":
+            case "SocieteContact":
                 return 'field_nom_contact';
                 break;
-            case "ContactsTelephones":
-            case "ContactsTelephones2":
+            case "SocieteTelephone":
+            case "SocieteTelephone2":
                 $this->node->field_telephone_contact[LANGUAGE_NONE][]['value'] = (string)$xmlValue;
                 return false;
                 break;
-            case "ContactsEmails":
+            case "SocieteEmail":
                 return 'field_mail';
                 break;
             case "IdentifiantVehicule":
@@ -221,7 +260,7 @@ class SavePlanetVOElements
             case "Date1Mec":
                 return 'field_date1mec';
                 break;
-            case "GenreLibelle":
+            case "GenreCode":
                 return 'field_genre_libelle';
                 break;
             case "Marque":
@@ -239,7 +278,7 @@ class SavePlanetVOElements
             case "TypeMine":
                 return 'field_type_mine';
                 break;
-            case "EnergieLibelle":
+            case "EnergieCode":
                 return 'field_energie_libelle_select';
                 break;
             case "PuissanceFiscale":
@@ -266,7 +305,7 @@ class SavePlanetVOElements
             case "Couleur":
                 return 'field_couleur';
                 break;
-            case "BoiteLibelle":
+            case "BoiteCode":
                 return 'field_boite';
                 break;
             case "NbRapports":
@@ -276,7 +315,8 @@ class SavePlanetVOElements
                 return 'field_prix_de_vente_ttc';
                 break;
             case "PremiereMain":
-                if($xmlValue == 'VRAI')
+                $testval = (string)$xmlValue;
+                if($testval == 'VRAI')
                     $this->node->field_premiere_main[LANGUAGE_NONE][0]['value'] = 1;
                 return false;
                 break;
@@ -284,17 +324,27 @@ class SavePlanetVOElements
                 return 'field_garantie_libelle';
                 break;
             case "DestinationLibelle":
-                return false;
+                return 'field_destination_libelle';;
                 break;
             case "CategorieLibelle":
                 return 'field_categorie_libelle';
                 break;
             case "EquipementsSerieEtOption":
                 $values = explode('|', $xmlValue);
+                $this->node->field_equipements_et_options[LANGUAGE_NONE] = array();
                 foreach($values as $k => $value){
-                    $this->node->field_equipement_de_serie_et_opt[LANGUAGE_NONE][$k]['value'] = (string)$value;
+                    if(empty($value)) continue;
+
+                    $equipement_id = $this->saveOptionAndEquipement((string)$value);
+
+                    if(is_array($equipement_id))
+                        $equipement_id = current($equipement_id);
+                    
+                    if(!is_int($equipement_id) && !is_string($equipement_id))
+                        $equipement_id = $equipement_id->nid;
+                    
+                    $this->node->field_equipements_et_options[LANGUAGE_NONE][]['target_id'] = $equipement_id;
                 }
-                
                 return false;
                 break;
             case "SiteLibelle":
@@ -304,8 +354,12 @@ class SavePlanetVOElements
                 return 'field_lieu_libelle';
                 break;
             case "Photos":
-                if(!empty($xmlValue)){
+                $testval = (string)$xmlValue;
+                if(!empty($testval)){
                     $this->importPhotos($xmlValue, $this->ftp);
+                }
+                else {
+                  
                 }
                 return false;
                 break;
@@ -352,5 +406,52 @@ class SavePlanetVOElements
                 return false;
                 break;
         }
+    }
+    
+    /**
+     * Save an option
+     * 
+     * @param string $name
+     * @return integer
+     */
+    private function saveOptionAndEquipement($name)
+    {
+        //error_log('save Option and Equipment :' . $name);
+        
+        $node = new DrupalNode();
+
+        $id_equipment = $this->findEquipementIdByName($name);
+        //var_dump($id_equipment);
+        if(!$id_equipment){
+            $node_equipment = $node->createNode('equipements_et_options');
+
+            $node_equipment->title = $name;
+
+
+            drupal_alter('equipement_voiture', $node_equipment); //permet à drupal de modifier du contenu custom
+
+            $saved = $node->save($node_equipment);
+
+            return $saved;
+        } else {
+            return $id_equipment;
+        }
+    }
+    
+    /**
+     * Find an equipment with its name and return its node's id
+     * 
+     * @param string $name
+     * @return boolean|integer
+     */
+    private function findEquipementIdByName($name)
+    {
+        $node = new DrupalNode();
+        $equipment_id = $node->findBy(array('title' => $name), 'equipements_et_options');
+
+        if($equipment_id)
+            return $equipment_id;
+        else
+            return false;
     }
 }

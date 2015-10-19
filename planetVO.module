@@ -19,6 +19,16 @@ function planetVO_menu()
         'access arguments' => array('Importer configuration'),
         'type' => MENU_NORMAL_ITEM,
       );
+      
+      
+      $items['admin/config/system/planetvo/cron'] = array(
+        'title' => t('planetVO settings'),
+        'description' => t('planetVO CRON running'),
+        'page callback' => 'cron_task_import',
+        'page arguments' => array(),
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+      );
 
       return $items; 
 }
@@ -52,7 +62,7 @@ function planetvo_admin_settings()
   $form['planetvo_code'] = array(
     '#type' => 'textfield',
     '#title' => t('planetVO code'),
-    '#description' => t('Ex: tt4'),
+    '#description' => t('Séparés par des virgules. Ex: tt4, rr5, vv6'),
     '#default_value' => variable_get('planetvo_code'),
   );
   
@@ -65,16 +75,9 @@ function planetvo_admin_settings()
 function planetvo_cron()
 {
     
-    
-    $interval = variable_get('cron_example_interval', 24 * 3600); //daily task
-    
-    if (time() >= variable_get('cron_planetvo_next_execution', 0)) {
-        
-        cron_task_import();
-        
-        watchdog('cron_planetvo', 'cron_planetvo ran');
-        variable_set('cron_planetvo_next_execution', time() + $interval);
-    }
+    //cron_task_import();       
+    //watchdog('cron_planetvo', 'cron_planetvo ran');
+    die('là');
     
     
 }
@@ -84,19 +87,85 @@ function planetvo_cron()
  */
 function cron_task_import()
 {
+    watchdog('cron_planetvo', 'cron_planetvo begin running');
+    $limit_time = set_time_limit(0);
     
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', -1);
+    
+    //if(!$limit_time) die('Impossible d\'augmenter le temps d\'execution.');
+    
+    //unpublish every cars saved
+    $query = db_query("UPDATE {node} AS n LEFT JOIN field_data_field_code_pvo AS f ON f.entity_id = n.nid SET n.`status` = '0' WHERE n.`type` =:type AND f.bundle = :type;"
+    ,array(':type'=>'voiture'));
+ 
+    //on supprime tous les fichier de tmp-import
+    rrmdir( __DIR__ . '/tmp-import' );
+    if(!is_dir(__DIR__ . '/tmp-import')){
+        mkdir(__DIR__ . '/tmp-import');
+    }
+
     require __DIR__ . '/autoload.php';
     
     if(!variable_get('planetvo_server') || !variable_get('planetvo_login') || !variable_get('planetvo_pwd') || !variable_get('planetvo_code'))
         return false;
-
+    
     $ftpAccess = new \Import\FtpAccess\FtpAccess(variable_get('planetvo_server'), variable_get('planetvo_login'), variable_get('planetvo_pwd'));
     $connect = $ftpAccess->connect();
-    
-    $importer = new Import\Importer();
-    $importer->setTransport($ftpAccess, variable_get('planetvo_code'));
-    $importer->importElements();
-    
-    $importer->saveElements(1);
 
+    $codes = variable_get('planetvo_code');
+    
+    $aCodes = explode(',',$codes);
+    
+    //debug
+    //$aCodes = array('ka31c1');
+    
+    foreach( $aCodes as $code ){
+          $test = 0;
+          $time_deb = time();
+          $codeVO = trim($code);
+
+          if(empty($codeVO)) continue;
+          error_log('import planetVO code : '.$codeVO);
+          $importer = new Import\Importer();
+          $importer->setTransport($ftpAccess, $codeVO);
+          $importer->importElements();
+
+          $elements_saved = $importer->saveElements();
+          watchdog('cron_planetvo', 'cron_planetvo Elements sauvegarder : '.$elements_saved);
+          $time_fin = time();
+
+        
+        
+    }
+    //$memory = round(memory_get_usage(true)/1048576,2);
+    //var_dump($memory);
+    
+    watchdog('cron_planetvo', 'cron_planetvo ran');
+    error_log('import planetVO end');
+    die();
 }
+
+
+/* 
+ * hooks implémentés 
+ * 
+ * - hook_voiture_alter(&$node_voiture) //pour modifier le content type de base pour une voiture.
+ * - hook_photo_voiture_alter(&$node_photo_voiture) //pour modifier un content type photo de voiture.
+ * - hook_equipement_voiture_alter(&$node_equipements_et_options) //pour modifier un content type equipement et option
+ * - hook_voiture_after_save_alter(&$node_voiture) //pour modifier le content type de base pour une voiture APRES la sauvegarde (on a un ID voiture)
+ */
+
+
+function rrmdir($dir) { 
+   if (is_dir($dir)) { 
+     $objects = scandir($dir); 
+     foreach ($objects as $object) { 
+       if ($object != "." && $object != "..") { 
+         if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object); 
+       } 
+     } 
+     reset($objects); 
+     rmdir($dir); 
+   } 
+ }
